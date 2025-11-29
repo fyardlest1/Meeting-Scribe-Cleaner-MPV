@@ -17,7 +17,12 @@ DEBUG = False
 # ALLOWED_HOSTS = ['*']
 
 # to deploy on render
-ALLOWED_HOSTS = ["meeting-scribe-cleaner-mpv.onrender.com/"]
+ALLOWED_HOSTS = [
+    "meeting-scribe-cleaner-mpv.onrender.com",
+    "localhost", 
+    "127.0.0.1", 
+    ".onrender.com"
+]
 
 
 # Application definition
