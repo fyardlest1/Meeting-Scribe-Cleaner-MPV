@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}Meeting Scribe Cleaner{% endblock %}</title>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- NAV (Shared across all pages) -->
+    <nav class="bg-white border-b border-gray-200 py-4">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+            <a href="/" class="font-bold text-xl text-blue-700">Meeting-Scribe-Cleaner</a>
+
+            <div class="text-xs text-gray-500 uppercase tracking-widest">
+                MVP Prototype
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="max-w-6xl mx-auto px-6 py-10">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>
