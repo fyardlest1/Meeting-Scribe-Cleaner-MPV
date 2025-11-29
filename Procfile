@@ -1,1 +1,1 @@
-web: gunicorn meeting_scribe_map.wsgi:application
+web: gunicorn meeting_scribe_mvp.wsgi:application
