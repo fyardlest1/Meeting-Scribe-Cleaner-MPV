@@ -14,7 +14,10 @@ SECRET_KEY = 'django-insecure-j!-+)s3--s9ym1r9a*pfb0(s-zly(3t82llekm%h9u!lm7(9eq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+
+# to deploy on render
+ALLOWED_HOSTS = ["meeting-scribe-cleaner-mpv.onrender.com/"]
 
 
 # Application definition
@@ -109,9 +112,9 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_DIRS = [
-    'meetingscribe/static',
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'meetingscribe/static',
+# ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
