@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meeting-scribe-web
+    restart: always
+    command: /entrypoint.sh
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app                # hot reload en dev (tu peux désactiver en prod)
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    environment:
+      DJANGO_SETTINGS_MODULE: "meeting_scribe_mvp.settings"
+      PYTHONUNBUFFERED: 1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    command: celery -A meeting_scribe_mvp worker --loglevel=INFO
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+  beat:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    command: celery -A meeting_scribe_mvp beat --loglevel=INFO
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+
+
+volumes:
+  static_volume:
+  media_volume:
+

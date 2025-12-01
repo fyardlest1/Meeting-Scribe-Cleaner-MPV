@@ -1,0 +1,21 @@
+Build the Docker image / docker build -t app1_meetingscribecleaner .
+
+- docker build -t app1_meetingscribecleaner -f docker/Dockerfile .
+
+Run the container
+
+- docker run -d -p 8000:8000 --name pdf_saas_app app1_meetingscribecleaner
+
+Now your app should be accessible at:
+
+- http://localhost:8000/compress/
+
+Verify Ghostscript inside the container:
+
+- docker exec -it pdf_saas_app bash
+- gs --version
+
+Stop and remove the container
+
+- docker stop pdf_saas_app
+- docker rm pdf_saas_app

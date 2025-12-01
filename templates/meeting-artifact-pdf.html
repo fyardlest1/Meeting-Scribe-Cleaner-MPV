@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Meeting Report</title>
+{% extends "base.html" %}
+
+{% block title %}Meeting Report{% endblock %}
     <style>
         body { 
             font-family: Helvetica, sans-serif; 
@@ -58,8 +56,8 @@
             padding-top: 2px;
         }
     </style>
-</head>
-<body>
+
+{% block content %}
     <!-- Title Page -->
     <div class="title-page">
         <div class="title-main">Meeting Report</div>
@@ -90,6 +88,5 @@
     <div style="position: fixed; bottom: 0; width: 100%; font-size:10px; color:#666;">
         Page: <span class="pageNumber"></span> | Artifact #{{ artifact.id }}
     </div>
-</body>
-</html>
+{% endblock %}
 

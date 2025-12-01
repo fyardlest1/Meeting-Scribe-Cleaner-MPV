@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Compress PDF | PDF Tool{% endblock %}
+
+{% block content %}
+
+<!-- Trust Banner -->
+<div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-8 flex items-start gap-4">
+    <div class="text-emerald-600 mt-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+    </div>
+    <div>
+        <h3 class="font-bold text-emerald-800">Secure PDF Processing</h3>
+        <p class="text-sm text-emerald-700 mt-1">
+            Your file is processed in a temporary environment and never stored.
+        </p>
+    </div>
+</div>
+
+<!-- Form -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <h1 class="text-2xl font-bold mb-2">Compress Your PDF</h1>
+    <p class="text-gray-500 mb-6">Upload your PDF and instantly download a smaller version.</p>
+
+    <form id="compressForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- PDF Upload -->
+        <div class="mb-6">
+            {{ form.pdf_file }}
+        </div>
+
+        <!-- Compression Level -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Compression Level</label>
+            {{ form.quality }}
+        </div>
+
+        <button type="submit"
+            id="compressBtn"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex justify-center items-center gap-2">
+            <span>Compress PDF</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+        </button>
+    </form>
+
+    <!-- Progress Bar (hidden initially) -->
+    <div id="progressWrapper" class="hidden mt-6">
+        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+            <div id="progressBar" class="bg-blue-600 h-4 transition-all duration-200" style="width: 0%;"></div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2 text-center">Compressing your PDF...</p>
+    </div>
+</div>
+
+<!-- Size Preview -->
+{% if download_ready %}
+<div class="mt-8 bg-gray-100 p-6 rounded-lg border border-gray-300">
+    <h3 class="text-lg font-bold mb-3">Compression Summary</h3>
+    <p class="mb-1"><strong>Original Size:</strong> {{ before_size }} MB</p>
+    <p class="mb-1"><strong>Compressed Size:</strong> {{ after_size }} MB</p>
+</div>
+{% endif %}
+
+<!-- History -->
+{% if request.session.compression_history %}
+<div class="mt-10 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+    <h3 class="text-xl font-bold mb-4">Recent Compressions</h3>
+
+    <ul class="divide-y divide-gray-200">
+        {% for item in request.session.compression_history %}
+        <li class="py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="font-medium text-gray-800">{{ item.filename }}</p>
+                    <p class="text-sm text-gray-500">
+                        {{ item.date }} — {{ item.original_size }}MB → {{ item.final_size }}MB ({{ item.quality }})
+                    </p>
+                </div>
+                <span class="text-gray-400 text-xs uppercase tracking-wide">#{{ forloop.counter }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- JS Progress Bar -->
+<script>
+    const form = document.getElementById("compressForm");
+    const progressWrapper = document.getElementById("progressWrapper");
+    const progressBar = document.getElementById("progressBar");
+    const button = document.getElementById("compressBtn");
+
+    form.addEventListener("submit", function () {
+        button.disabled = true;
+        button.classList.add("opacity-50", "cursor-not-allowed");
+
+        progressWrapper.classList.remove("hidden");
+
+        let width = 0;
+        const interval = setInterval(() => {
+            width += 3;
+            if (width >= 95) width = 95; // stop avant 100%
+            progressBar.style.width = width + "%";
+        }, 200);
+
+        // Masquer la barre après 3 secondes
+        setTimeout(() => {
+            clearInterval(interval);
+            progressBar.style.width = "100%";
+            progressWrapper.classList.add("hidden");
+            button.disabled = false;
+            button.classList.remove("opacity-50", "cursor-not-allowed");
+        }, 3000);
+    });
+</script>
+
+
+{% endblock %}
